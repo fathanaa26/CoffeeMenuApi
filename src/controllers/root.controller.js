@@ -1,28 +1,17 @@
 import Root from "../model/root.model.js";
 
 const create = (req, res) => {
-  const payload = new Root({
-    title: req.body.title,
-    desc: req.body.desc,
-    isAvail: req.body.isAvail,
-  });
+  const payload = req.body;
 
-  payload.create(payload, (err, data) => {
+  Root.create(new Root(payload), (err, data) => {
     if (err) {
       res.status(500);
       res.send({
-        message: "[500] Error",
-        data: err.message,
+        err,
       });
     }
     res.status(201);
-    res.send({
-      message: "[201] Created Successfuly",
-      data: {
-        url: res.originalUrl,
-        data,
-      },
-    });
+    res.send({ data });
   });
 };
 
@@ -31,12 +20,12 @@ const getAll = (req, res) => {
     if (err) {
       res.status(500);
       res.send({
-        message: err.message,
+        err
       });
     }
     res.status(200);
     res.send({
-      message: data,
+      data,
     });
   });
 };
@@ -47,14 +36,10 @@ const getId = (req, res) => {
   Root.getId(payload, (err, data) => {
     if (err) {
       res.status(400);
-      res.send({
-        message: err.message,
-      });
+      res.send({err});
     }
     res.status(200);
-    res.send({
-      message: data,
-    });
+    res.send({data});
   });
 };
 
@@ -66,19 +51,15 @@ const updateId = (req, res) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404);
-        res.send({
-          message: "[404]Coffee not found",
-          err
-        });
+        res.send({err});
       }
       res.status(500);
       res.send({
-        message: "[500] error update message",
-        err
+        err,
       });
     }
     res.status(201);
-    res.send({data});
+    res.send({ data });
   });
 };
 

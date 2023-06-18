@@ -6,49 +6,38 @@ class Root {
     this.desc = bodyObj.desc;
     this.isAvail = bodyObj.isAvail;
   }
-  // constructor hanya dipakai ketika terdapat request
-  // menggunakan body
 
-  create(bodyPayload, result) {
+  static create(bodyPayload, result) {
     const query = "INSERT INTO coffee_list SET ?";
     db.query(query, bodyPayload, (err, res) => {
       if (err) {
-        console.log(`error ${err}`);
         result(err, null);
         return;
       }
-      console.log(`tutorials created : `, {
-        id: res.insertId,
-        ...bodyPayload,
-      });
-      result(null, { id: res.insertId, ...bodyPayload });
+      result(null, {res,data:{...bodyPayload}});
     });
   }
 
   static getAll(result) {
-    let query = `SELECT * FROM coffee_list`;
+    let query = "SELECT * FROM coffee_list";
 
     db.query(query, (err, res) => {
       if (err) {
-        console.log(`error ${err.message}`);
         result(err, null);
         return;
       }
-      console.log("get all tutorial ", res);
       result(null, res);
     });
   }
 
   static getId(idPayload, result) {
-    let query = `SELECT * FROM coffee_list WHERE id = ?`;
+    let query = "SELECT * FROM coffee_list WHERE `id` = ?";
     db.query(query, idPayload, (err, res) => {
       if (err) {
-        console.log(`error ${err.message}`);
         result(err, null);
         return;
       }
       if (res.length) {
-        console.log("found match id", res[0]);
         result(null, res);
         return;
       }
