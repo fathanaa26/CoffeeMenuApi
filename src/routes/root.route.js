@@ -1,20 +1,35 @@
 import express from "express";
-import {
-  create,
-  getAll,
-  getId,
-  removeId,
-  updateId,
-} from "../controllers/root.controller.js";
-import date from "../middlewares/date.md.js";
 
 const router = express.Router();
 
-router.use(date);
-router.post("/", create);
-router.get("/", getAll);
-router.get("/:id", getId);
-router.put("/:id", updateId);
-router.delete("/:id", removeId);
+let session;
+
+router.get("/", (req, res) => {
+  session = req.session;
+  if (session.username) {
+    res.send(
+      `Welcome ${session.username}, please <a href='/logout'>click to logout</a>`
+    );
+  } else {
+    res.send("please login");
+  }
+});
+
+router.get("/logout", (req, res) => {
+  req.session.destroy();
+  res.redirect("/");
+});
+
+router.post("/", (req, res) => {
+  if (req.body.username === "admin" && req.body.pw === "1234") {
+    session = req.session;
+    session.username = req.body.username;
+    res.send(
+      `Welcome ${session.username}, please <a href='/logout'>click to logout</a>`
+    );
+  } else {
+    res.send("invalid credential");
+  }
+});
 
 export default router;
