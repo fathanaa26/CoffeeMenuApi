@@ -1,4 +1,4 @@
-import db from "./mysql_connector.js";
+import db from "../util/mysql_connector.js";
 
 class Root {
   constructor(bodyObj) {
@@ -14,7 +14,7 @@ class Root {
         result(err, null);
         return;
       }
-      result(null, {res,data:{...bodyPayload}});
+      result(null, { res, data: { ...bodyPayload } });
     });
   }
 
@@ -45,21 +45,40 @@ class Root {
   }
 
   static updateId(bodyPayload, idPayload, result) {
-    let query = "UPDATE coffee_list SET `title` = ?, `desc` = ?, `isAvail` = ? WHERE id = ?";
+    let query =
+      "UPDATE coffee_list SET `title` = ?, `desc` = ?, `isAvail` = ? WHERE id = ?";
 
-    db.query(query, [bodyPayload.title,bodyPayload.desc,bodyPayload.isAvail,idPayload], (err, res) => {
+    db.query(
+      query,
+      [bodyPayload.title, bodyPayload.desc, bodyPayload.isAvail, idPayload],
+      (err, res) => {
+        if (err) {
+          result(err, null);
+          return;
+        }
+        if (res.affectedRows == 0) {
+          result({ kind: "not_found" }, null);
+          return;
+        }
+        result(null, {
+          res,
+          data: {
+            id: idPayload,
+            ...bodyPayload,
+          },
+        });
+      }
+    );
+  }
+
+  static removeId(idPayload, result) {
+    const query = "DELETE FROM coffee_list WHERE `id` = ?";
+    db.query(query, idPayload, (err, res) => {
       if (err) {
         result(err, null);
         return;
       }
-      if (res.affectedRows == 0) {
-        result({ kind: "not_found" }, null);
-        return;
-      }
-      result(null, {res,data:{
-        id:idPayload,
-        ...bodyPayload
-      }});
+      result(null, res);
     });
   }
 }

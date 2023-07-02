@@ -20,9 +20,10 @@ const getAll = (req, res) => {
     if (err) {
       res.status(500);
       res.send({
-        err
+        err,
       });
     }
+    // res.setHeader('Content-Type', 'application/json');
     res.status(200);
     res.send({
       data,
@@ -36,10 +37,10 @@ const getId = (req, res) => {
   Root.getId(payload, (err, data) => {
     if (err) {
       res.status(400);
-      res.send({err});
+      res.send({ err });
     }
     res.status(200);
-    res.send({data});
+    res.send({ data });
   });
 };
 
@@ -51,7 +52,7 @@ const updateId = (req, res) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404);
-        res.send({err});
+        res.send({ err });
       }
       res.status(500);
       res.send({
@@ -63,4 +64,17 @@ const updateId = (req, res) => {
   });
 };
 
-export { create, getAll, getId, updateId };
+const removeId = (req, res) => {
+  const id = req.params.id;
+
+  Root.removeId(id, (err, data) => {
+    if (err) {
+      res.status(404);
+      res.send(err);
+    }
+    res.status(200);
+    res.send(data);
+  });
+};
+
+export { create, getAll, getId, updateId, removeId };

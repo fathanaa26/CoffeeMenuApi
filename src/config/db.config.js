@@ -1,7 +1,9 @@
+import getExtIp from "../util/getExtIp.js";
+
 const db_config = {
-  host: "sql12.freesqldatabase.com",
-  user: "sql12626912",
-  password: "XUXDwuYkwR",
+  host: getExtIp().address,
+  user: "root",
+  password: "password",
   database: "sql12626912",
 };
 

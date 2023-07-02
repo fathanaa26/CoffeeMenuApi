@@ -11,8 +11,8 @@ const app = express();
 const corsOption = {
   origin: "http://localhost:3002",
 };
-app.use(cors(corsOption)); // CORS Setup
 
+app.use(cors(corsOption)); // CORS Setup`
 app.use(morgan("dev")); // Logger
 
 app.use(helmet()); // HTTP Header Security

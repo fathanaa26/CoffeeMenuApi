@@ -3,6 +3,7 @@ import {
   create,
   getAll,
   getId,
+  removeId,
   updateId,
 } from "../controllers/root.controller.js";
 import date from "../middlewares/date.md.js";
@@ -14,5 +15,6 @@ router.post("/", create);
 router.get("/", getAll);
 router.get("/:id", getId);
 router.put("/:id", updateId);
+router.delete("/:id", removeId);
 
 export default router;
