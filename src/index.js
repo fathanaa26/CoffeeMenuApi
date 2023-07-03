@@ -8,6 +8,8 @@ import fs from "fs";
 import session from "express-session";
 import cookieParser from "cookie-parser";
 
+import "dotenv/config.js";
+
 import root from "./routes/root.route.js";
 import getExtIp from "./util/getExtIp.js";
 
@@ -16,7 +18,7 @@ const cert = {
   key: fs.readFileSync("key.pem"),
   cert: fs.readFileSync("cert.pem"),
 };
-const extip = getExtIp().address;
+const extip = getExtIp().address || "localhost";
 const app = express();
 
 const oneDay = 1000 * 60 * 60 * 24;
@@ -51,7 +53,7 @@ app.use(cookieParser());
 app.use("/", root);
 
 app.use((req, res) => {
-  res.status(404).send("[404] Not Found");
+  res.status(404).send(`[404] ${req.originalUrl} Not Found`);
 });
 
 // custom error handler
